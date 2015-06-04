@@ -1,10 +1,10 @@
 var React = require('react');
 
 var $ = React.DOM;
-var List = React.createClass({
+var JsonTable = React.createClass({
 	defaultSettings: {
 		header: true,
-		noItemsMessage: 'No items'
+		noRowsMessage: 'No items'
 	},
 
 	getSetting: function( name ){
@@ -18,7 +18,7 @@ var List = React.createClass({
 
 	render: function(){
 		var cols = this.normalizeColumns(),
-			contents = [this.renderItems( cols )]
+			contents = [this.renderRows( cols )]
 		;
 
 		if( this.getSetting('header') )
@@ -42,22 +42,22 @@ var List = React.createClass({
 		);
 	},
 
-	renderItems: function( cols ){
+	renderRows: function( cols ){
 		var me = this,
 			items = this.props.items,
 			i = 1
 		;
 
 		if( !items || !items.length )
-			return $.tbody({}, [$.tr({}, $.td({}, this.getSetting('noItemsMessage') ))]);
+			return $.tbody({}, [$.tr({}, $.td({}, this.getSetting('noRowsMessage') ))]);
 
 		var rows = items.map( function( item ){
-			return React.createElement(Item, {
+			return React.createElement(Row, {
 				key: me.getKey( item ),
 				item: item,
 				columns: cols,
 				i: i++,
-				onClickItem: me.onClickItem,
+				onClickRow: me.onClickItem,
 				onClickCell: me.onClickCell
 			});
 		});
@@ -151,7 +151,7 @@ var List = React.createClass({
 	}
 });
 
-var Item = React.createClass({
+var Row = React.createClass({
 	render: function() {
 		var me = this,
 			cells = this.props.columns.map( function( col ){
@@ -179,7 +179,7 @@ var Item = React.createClass({
 
 		return $.tr({
 			className: className,
-			onClick: me.onClickItem
+			onClick: me.onClickRow
 		}, cells );
 	},
 
@@ -187,9 +187,9 @@ var Item = React.createClass({
 		this.props.onClickCell( e, e.target.dataset.key, this.props.item );
 	},
 
-	onClickItem: function( e ){
-		this.props.onClickItem( e, this.props.item );
+	onClickRow: function( e ){
+		this.props.onClickRow( e, this.props.item );
 	}
 });
 
-module.exports = List;
+module.exports = JsonTable;
