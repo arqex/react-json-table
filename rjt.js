@@ -17,41 +17,34 @@ var List = React.createClass({
 	},
 
 	render: function(){
-		var contents = [this.renderItems()];
+		var cols = this.normalizeColumns(),
+			contents = [this.renderItems( cols )]
+		;
 
 		if( this.getSetting('header') )
-			contents.unshift( this.renderHeader() );
+			contents.unshift( this.renderHeader( cols ) );
 
 		return $.table({ className: "jsonTable" }, contents );
 	},
 
-	renderHeader: function(){
+	renderHeader: function( cols ){
 		var me = this,
-			cells = this.props.fields.map( function(field){
-				var name;
-				if( typeof field == 'string' ){
-					name = field;
-				}
-				else {
-					name = field.name;
-				}
-
+			cells = cols.map( function(col){
 				return $.th(
-					{ className: 'jsonColumn', key: name, onClick: me.onClickHeader, "data-name": name},
-					name
+					{ className: 'jsonColumn', key: col.key, onClick: me.onClickHeader, "data-key": col.key },
+					col.label
 				);
 			})
 		;
 
 		return $.thead({ key: 'th'},
-			$.tr({ className: 'jsonHeader', key: 'h', "data-name": 'header' }, cells )
+			$.tr({ className: 'jsonHeader', key: 'h', "data-key": 'header' }, cells )
 		);
 	},
 
-	renderItems: function(){
+	renderItems: function( cols ){
 		var me = this,
 			items = this.props.items,
-			fields = this.normalizeFields(),
 			i = 1
 		;
 
@@ -62,8 +55,8 @@ var List = React.createClass({
 			return React.createElement(Item, {
 				key: me.getKey( item ),
 				item: item,
-				fields: fields,
-				i: i,
+				columns: cols,
+				i: i++,
 				onClickItem: me.onClickItem,
 				onClickCell: me.onClickCell
 			});
@@ -72,27 +65,53 @@ var List = React.createClass({
 		return $.tbody({}, rows);
 	},
 
-	normalizeFields: function(){
-		var getItemField = function( item, field ){
-			return item[ field ];
-		};
+	getItemField: function( item, field ){
+		return item[ field ];
+	},
 
-		return this.props.fields.map( function( field ){
-			var name, content;
-			if( typeof field == 'string' ){
+	normalizeColumns: function(){
+		var getItemField = this.getItemField,
+			cols = this.props.columns,
+			items = this.props.items
+		;
+
+		if( !cols ){
+			if( !items || !items.length )
+				return [];
+
+			return Object.keys( items[0] ).map( function( key ){
+				return { key: key, label: key, cell: getItemField };
+			});
+		}
+
+		return cols.map( function( col ){
+			var key;
+			if( typeof col == 'string' ){
 				return {
-					name: field,
-					content: getItemField
+					key: col,
+					label: col,
+					cell: getItemField
 				};
 			}
 
-			if( typeof field == 'object' ){
-				return field;
+			if( typeof col == 'object' ){
+				key = col.key || col.label;
+
+				// This is about get default column definition
+				// we use label as key if not defined
+				// we use key as label if not defined
+				// we use getItemField as cell function if not defined
+				return {
+					key: key,
+					label: col.label || key,
+					cell: col.cell || getItemField
+				};
 			}
 
 			return {
+				key: 'unknown',
 				name:'unknown',
-				content: 'Unknown'
+				cell: 'Unknown'
 			};
 		});
 	},
@@ -113,10 +132,6 @@ var List = React.createClass({
 		return true;
 	},
 
-	componentDidUpdate: function(){
-		console.log('updated');
-	},
-
 	onClickItem: function( e, item ){
 		if( this.props.onClickItem ){
 			this.props.onClickItem( e, item );
@@ -125,13 +140,13 @@ var List = React.createClass({
 
 	onClickHeader: function( e ){
 		if( this.props.onClickHeader ){
-			this.props.onClickHeader( e, e.target.dataset.name );
+			this.props.onClickHeader( e, e.target.dataset.key );
 		}
 	},
 
-	onClickCell: function( e, field, item ){
+	onClickCell: function( e, key, item ){
 		if( this.props.onClickCell ){
-			this.props.onClickCell( e, field, item );
+			this.props.onClickCell( e, key, item );
 		}
 	}
 });
@@ -139,18 +154,18 @@ var List = React.createClass({
 var Item = React.createClass({
 	render: function() {
 		var me = this,
-			cells = this.props.fields.map( function( field ){
-				var content = field.content,
-					name = field.name
+			cells = this.props.columns.map( function( col ){
+				var content = col.cell,
+					key = col.key
 				;
 
 				if( typeof content == 'function' )
-					content = content( me.props.item, name );
+					content = content( me.props.item, key );
 
 				return $.td( {
 					className: 'jsonCell',
-					key: name,
-					"data-name": name,
+					key: key,
+					"data-key": key,
 					onClick: me.onClickCell
 				}, content );
 			})
@@ -169,7 +184,7 @@ var Item = React.createClass({
 	},
 
 	onClickCell: function( e ){
-		this.props.onClickCell( e, e.target.dataset.name, this.props.item );
+		this.props.onClickCell( e, e.target.dataset.key, this.props.item );
 	},
 
 	onClickItem: function( e ){
