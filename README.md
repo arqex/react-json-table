@@ -19,6 +19,7 @@ Features:
 * Callbacks for clicks on headers, rows or cells.
 * Allows to add custom columns.
 * Enough `className` attributes to let you style it your own way.
+* Pure rendering, no internal state, everything comes from the props.
 
 ## Motivation
 Creating tables in react is a repetitive work:
@@ -48,8 +49,9 @@ You can see the simplest example of use at the top of this page, but probably yo
 Prop name | Values | Description
 ---|---|---
 rows | Array[Object] | The data you want to display in the table.
-columns | Array[String\|Object] | The columns and their order for the table. You can use a `string` to use a field of the items passed in the `rows` props as cell content. But also it is possible to use an `object` to customize the column. See [column definitions](#column_definition).
-settings | Object | Further customization of the table, see [table settings](#table_settings).
+columns | Array[String\|Object] | The columns and their order for the table. If it is a `string` the value attribute of the current row that matches it will be shown as cell content. 
+But also it is possible to use an `object` to customize the column. See [column definitions](#column-definition).
+settings | Object | Further customization of the table, see [table settings](#table-settings).
 onClickCell | Function | Callback triggered when a cell is clicked: `fn( event, columnName, rowData )`.
 onClickRow | Function | Callback triggered when a row is clicked: `fn( event, rowData )`
 onClickHeader | Function | Callback triggered when a column header is clicked: `fn( event, columnName )`
@@ -73,5 +75,18 @@ var columns = [
 
 React.render(<JsonTable rows={ items } columns={ columns } />, document.body);
 ```
+http://codepen.io/arqex/pen/waJREq?editors=011
 
+As you can see in the example, a column definition can be just a string with the name of the field to display or an object. But if an object is passed the customization can be much more. A column definition can be an object with the following properties:
+* `key`: It is the internal name use for the column by JsonTable. It is added to the className of the cells and headers to apply styles to the column. It is also passed as an argument for the click callbacks. If the column definition has no `cell` property, it also represent the property of the current row to be shown as cell content.
+* `label`: It is the content of the column header. You can use a `string` or a `ReactComponent` to show inside the header cell.
+* `cell`: What is going to be displayed inside the column cells. It can be a `string` or `ReactComponent` to show static contents, but tipically it is a `function( rowData, columnKey )` that return the contents for the cell. This way different contents are shown in the column for different rows.
+
+### Table settings
+Using the prop `settings` we can customize some details that are not related to columns. It is an object with the following properties:
+* `header`: If `false`, no header will be shown for the table.
+* `noRowsMessage`: The message that is shown where the table has no rows.
+* `keyField`: React components that have a list of children need to give to every children a different `key` prop in order to make the diff algorithm check if something has change. You can define here what field of your rows will be used as a row key. JsonTable uses the `id`  or `_id` property of your rows automatically if you don't give this setting, but **you must be sure that there is a keyField for your rows** if you don't want strange behaviours on update.
+
+[You can play with the table settings here](http://codepen.io/arqex/pen/YXZBKG?editors=011).
 

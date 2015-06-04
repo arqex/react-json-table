@@ -62,20 +62,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	var React = __webpack_require__(1);
 
 	var $ = React.DOM;
-	var JsonTable = React.createClass({
-		defaultSettings: {
-			header: true,
-			noRowsMessage: 'No items'
-		},
 
-		getSetting: function( name ){
+	// Some shared attrs for JsonTable and JsonRow
+	var defaultSettings = {
+			header: true,
+			noRowsMessage: 'No items',
+			classPrefix: 'json'
+		},
+		getSetting = function( name ){
 			var settings = this.props.settings;
 
 			if( !settings || typeof settings[ name ] == 'undefined' )
-				return this.defaultSettings[ name ];
+				return defaultSettings[ name ];
 
 			return settings[ name ];
-		},
+		}
+	;
+
+	var JsonTable = React.createClass({
+		getSetting: getSetting,
 
 		render: function(){
 			var cols = this.normalizeColumns(),
@@ -85,27 +90,29 @@ return /******/ (function(modules) { // webpackBootstrap
 			if( this.getSetting('header') )
 				contents.unshift( this.renderHeader( cols ) );
 
-			return $.table({ className: "jsonTable" }, contents );
+			return $.table({ className: this.getSetting( 'classPrefix' ) + 'Table' }, contents );
 		},
 
 		renderHeader: function( cols ){
 			var me = this,
+				prefix = this.getSetting( 'classPrefix' ),
 				cells = cols.map( function(col){
 					return $.th(
-						{ className: 'jsonColumn', key: col.key, onClick: me.onClickHeader, "data-key": col.key },
+						{ className: prefix + 'Column', key: col.key, onClick: me.onClickHeader, "data-key": col.key },
 						col.label
 					);
 				})
 			;
 
 			return $.thead({ key: 'th'},
-				$.tr({ className: 'jsonHeader', key: 'h', "data-key": 'header' }, cells )
+				$.tr({ className: prefix + 'Header' }, cells )
 			);
 		},
 
 		renderRows: function( cols ){
 			var me = this,
 				items = this.props.rows,
+				settings = this.props.settings || {},
 				i = 1
 			;
 
@@ -113,9 +120,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				return $.tbody({}, [$.tr({}, $.td({}, this.getSetting('noRowsMessage') ))]);
 
 			var rows = items.map( function( item ){
+				var key = me.getKey( item );
 				return React.createElement(Row, {
-					key: me.getKey( item ),
+					key: key,
+					reactKey: key,
 					item: item,
+					settings: settings,
 					columns: cols,
 					i: i++,
 					onClickRow: me.onClickRow,
@@ -213,18 +223,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 	var Row = React.createClass({
+		getSetting: getSetting,
+
 		render: function() {
 			var me = this,
-				cells = this.props.columns.map( function( col ){
+				props = this.props,
+				cellClass = this.getSetting('cellClass'),
+				rowClass = this.getSetting('rowClass'),
+				prefix = this.getSetting('classPrefix'),
+				cells = props.columns.map( function( col ){
 					var content = col.cell,
-						key = col.key
+						key = col.key,
+						className = prefix + 'Cell ' + prefix + 'Cell_' + key
 					;
 
+					if( cellClass )
+						className = cellClass( className, key, props.item );
+
 					if( typeof content == 'function' )
-						content = content( me.props.item, key );
+						content = content( props.item, key );
 
 					return $.td( {
-						className: 'jsonCell',
+						className: className,
 						key: key,
 						"data-key": key,
 						onClick: me.onClickCell
@@ -232,11 +252,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				})
 			;
 
-			var className = 'jsonRow json';
-			if( this.props.i % 2 )
-				className += 'Odd';
-			else
-				className += 'Even';
+			var className = prefix + 'Row ' + prefix +
+				(props.i % 2 ? 'Odd' : 'Even')
+			;
+
+			if( props.reactKey )
+				className += ' ' + prefix + 'Row_' + props.reactKey;
+
+			if( rowClass )
+				className = rowClass( className, props.item );
 
 			return $.tr({
 				className: className,
