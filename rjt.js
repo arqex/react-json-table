@@ -44,7 +44,7 @@ var JsonTable = React.createClass({
 
 	renderRows: function( cols ){
 		var me = this,
-			items = this.props.items,
+			items = this.props.rows,
 			i = 1
 		;
 
@@ -57,7 +57,7 @@ var JsonTable = React.createClass({
 				item: item,
 				columns: cols,
 				i: i++,
-				onClickRow: me.onClickItem,
+				onClickRow: me.onClickRow,
 				onClickCell: me.onClickCell
 			});
 		});
@@ -72,7 +72,7 @@ var JsonTable = React.createClass({
 	normalizeColumns: function(){
 		var getItemField = this.getItemField,
 			cols = this.props.columns,
-			items = this.props.items
+			items = this.props.rows
 		;
 
 		if( !cols ){
@@ -132,9 +132,9 @@ var JsonTable = React.createClass({
 		return true;
 	},
 
-	onClickItem: function( e, item ){
-		if( this.props.onClickItem ){
-			this.props.onClickItem( e, item );
+	onClickRow: function( e, item ){
+		if( this.props.onClickRow ){
+			this.props.onClickRow( e, item );
 		}
 	},
 

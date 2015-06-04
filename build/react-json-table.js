@@ -105,7 +105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		renderRows: function( cols ){
 			var me = this,
-				items = this.props.items,
+				items = this.props.rows,
 				i = 1
 			;
 
@@ -118,7 +118,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					item: item,
 					columns: cols,
 					i: i++,
-					onClickRow: me.onClickItem,
+					onClickRow: me.onClickRow,
 					onClickCell: me.onClickCell
 				});
 			});
@@ -133,7 +133,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		normalizeColumns: function(){
 			var getItemField = this.getItemField,
 				cols = this.props.columns,
-				items = this.props.items
+				items = this.props.rows
 			;
 
 			if( !cols ){
@@ -193,9 +193,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			return true;
 		},
 
-		onClickItem: function( e, item ){
-			if( this.props.onClickItem ){
-				this.props.onClickItem( e, item );
+		onClickRow: function( e, item ){
+			if( this.props.onClickRow ){
+				this.props.onClickRow( e, item );
 			}
 		},
 
