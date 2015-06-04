@@ -2,18 +2,27 @@ var React = require('react');
 
 var $ = React.DOM;
 var List = React.createClass({
-	getDefaultProps: function(){
-		return {
-			header: true
-		};
+	defaultSettings: {
+		header: true,
+		noItemsMessage: 'No items'
+	},
+
+	getSetting: function( name ){
+		var settings = this.props.settings;
+
+		if( !settings || typeof settings[ name ] == 'undefined' )
+			return this.defaultSettings[ name ];
+
+		return settings[ name ];
 	},
 
 	render: function(){
-		var header = this.renderHeader(),
-			items = this.renderItems()
-		;
+		var contents = [this.renderItems()];
 
-		return $.table({ className: "jsonTable"}, [ header, items ]);
+		if( this.getSetting('header') )
+			contents.unshift( this.renderHeader() );
+
+		return $.table({ className: "jsonTable" }, contents );
 	},
 
 	renderHeader: function(){
@@ -47,7 +56,7 @@ var List = React.createClass({
 		;
 
 		if( !items || !items.length )
-			return $.tbody({}, [$.tr({}, $.td({}, 'No items'))]);
+			return $.tbody({}, [$.tr({}, $.td({}, this.getSetting('noItemsMessage') ))]);
 
 		var rows = items.map( function( item ){
 			return React.createElement(Item, {
