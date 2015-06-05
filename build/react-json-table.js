@@ -1,5 +1,5 @@
 /*
-react-json-table v0.0.1
+react-json-table v0.0.2
 https://github.com/arqex/react-json-table
 MIT: https://github.com/arqex/react-json-table/raw/master/LICENSE
 */
@@ -96,9 +96,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		renderHeader: function( cols ){
 			var me = this,
 				prefix = this.getSetting( 'classPrefix' ),
+				headerClass = this.getSetting( 'headerClass' ),
 				cells = cols.map( function(col){
+					var className = prefix + 'Column';
+					if( headerClass )
+						className = headerClass( className, col.key );
+
 					return $.th(
-						{ className: prefix + 'Column', key: col.key, onClick: me.onClickHeader, "data-key": col.key },
+						{ className: className, key: col.key, onClick: me.onClickHeader, "data-key": col.key },
 						col.label
 					);
 				})

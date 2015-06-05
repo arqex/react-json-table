@@ -31,7 +31,7 @@ Creating tables in react is a repetitive work:
 * Hey, I forgot to add `<tbody>` tags so it is not working! Add them!
 * ...
 
-I don't want to do it ever again, so here it is a simple but flexible table component that will do that ugly stuff so on.
+I don't want to do it ever again. Here it is a simple but flexible table component that will do that ugly stuff so on.
 
 ## Installation
 Using node package manager:
@@ -84,9 +84,86 @@ As you can see in the example, a column definition can be just a string with the
 
 ### Table settings
 Using the prop `settings` we can customize some details that are not related to columns. It is an object with the following properties:
-* `header`: If `false`, no header will be shown for the table.
-* `noRowsMessage`: The message that is shown where the table has no rows.
-* `keyField`: React components that have a list of children need to give to every children a different `key` prop in order to make the diff algorithm check if something has change. You can define here what field of your rows will be used as a row key. JsonTable uses the `id`  or `_id` property of your rows automatically if you don't give this setting, but **you must be sure that there is a keyField for your rows** if you don't want strange behaviours on update.
+
+Setting name | Values | Description
+---|---|---
+`cellClass` | *function* | It is possible to add custom classes to the cells if you pass a function `fn( currentClass, columnKey, rowData )` in this setting.
+`classPrefix` | *string* | JsonTable uses `class` attributes for its markup like `jsonRow` or `jsonCell`. The default prefix is `json` but you can use this setting to change it in the case it is conflicting with other classes in your app.
+`header` | *boolean* | If `false`, no header will be shown for the table. Default `true`.
+`headerClass` | *function* | It is possible to add custom classes to the column headers if you pass a function `fn( currentClass, columnKey )` in this setting.
+`keyField` | *string* | React components that have a list of children need to give to every children a different `key` prop in order to make the diff algorithm check if something has change. You can define here what field of your rows will be used as a row key. JsonTable uses the `id`  or `_id` property of your rows automatically if you don't give this setting, but **you must be sure that there is a keyField for your rows** if you don't want strange behaviours on update. [More info](https://facebook.github.io/react/docs/multiple-components.html#dynamic-children).
+`noRowsMessage` | *string*, *ReactComponent* | Message shown when the table has no rows. Default *"No items"*.
+`rowClass` | *function* | It is possible to add custom classes to the rows if you pass a function `fn( currentClass, rowData )` in this setting.
 
 [You can play with the table settings here](http://codepen.io/arqex/pen/YXZBKG?editors=011).
+
+### Reacting to clicks
+It is always useful binding some callbacks when the user clicks on the table.
+Click callbacks can be added using the props `onClickCell`, `onClickHeader` and `onClickRow`. In the next example, we create a component using JsonTable where rows and cells are selected on click, and columns are sorted when the column header is clicked:
+```js
+var SelectTable = React.createClass({
+  getInitialState: function(){
+    // We will store the selected cell and row, also the sorted column
+    return {row: false, cell: false, sort: false};
+  },  
+
+  render: function(){
+    var me = this,
+        // clone the rows
+        items = this.props.rows.slice()
+    ;
+    // Sort the table
+    if( this.state.sort ){
+      items.sort( function( a, b ){
+         return a[ me.state.sort ] > b[ me.state.sort ] ? 1 : -1;
+      });
+    }
+        
+    return <JsonTable 
+      rows={items} 
+      settings={ this.getSettings() } 
+      onClickCell={ this.onClickCell }
+      onClickHeader={ this.onClickHeader }
+      onClickRow={ this.onClickRow } />;
+  },
+  
+  getSettings: function(){
+      var me = this;
+      // We will add some classes to the selected rows and cells
+      return {
+        keyField: 'name',
+        cellClass: function( current, key, item){
+          if( me.state.cell == key && me.state.row == item.name )
+            return current + ' cellSelected';
+          return current;
+        },
+        headerClass: function( current, key ){
+            if( me.state.sort == key )
+              return current + ' headerSelected';
+            return current;
+        },
+        rowClass: function( current, item ){
+          if( me.state.row == item.name )
+            return current + ' rowSelected';
+          return current;
+        }
+      };
+  },
+  
+  onClickCell: function( e, column, item ){
+    this.setState( {cell: column} );
+  },
+  
+  onClickHeader: function( e, column ){
+    this.setState( {sort: column} );
+  },
+  
+  onClickRow: function( e, item ){
+    this.setState( {row: item.name} );
+  }  
+});
+```
+http://codepen.io/arqex/pen/pJPzox?editors=011
+
+
 
