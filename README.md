@@ -1,5 +1,5 @@
 # react-json-table
-A simple but reactive table react component to display JSON data.
+A simple but flexible table react component to display JSON data.
 
 As simple as feeding it with an array of objects.
 ```js
@@ -31,26 +31,25 @@ Creating tables in react is a repetitive work:
 * Hey, I forgot to add `<tbody>` tags so it is not working! Add them!
 * ...
 
-I don't want to do it ever again. Here it is a simple but flexible table component that will do that ugly stuff so on.
+I don't want to do it ever again, JsonTable component will do that ugly stuff so on.
 
 ## Installation
 Using node package manager:
 ```
-npm install react-json-table -save
+npm install react-json-table --save
 ```
-You can also use the built UMD files [react-json-table.js](https://github.com/arqex/react-json-table/blob/master/build/react-json-table.js)(6KB) and [react-json-table.min.js](https://github.com/arqex/react-json-table/blob/master/build/react-json-table.min.js)(3KB) if you want it globally or as an AMD package.
+You can also use the built UMD files [react-json-table.js](https://github.com/arqex/react-json-table/blob/master/build/react-json-table.js)(6KB) and [react-json-table.min.js](https://github.com/arqex/react-json-table/blob/master/build/react-json-table.min.js)(3KB) if you want `JsonTable` globally or as an AMD package.
 
 Half of the built version size is the code to create the UMD module. NPM version is really lightweight.
 
 ## Usage
-You can see the simplest example of use at the top of this page, but probably you would like to customize a bit the behaviour of the table to adapt it to your needs. Have a look at the accepted props.
+You can see the simplest example of use at the top of this page, but probably you would like to customize a bit the behaviour of the table to adapt it to your needs. Have a look at the accepted component props.
 
 ### props
 Prop name | Values | Description
 ---|---|---
 rows | Array[Object] | The data you want to display in the table.
-columns | Array[String\|Object] | The columns and their order for the table. If it is a `string` the value attribute of the current row that matches it will be shown as cell content. 
-But also it is possible to use an `object` to customize the column. See [column definitions](#column-definition).
+columns | Array[String\|Object] | The columns and their order for the table. If it is a `string` the value attribute of the current row that matches it will be shown as cell content. But also it is possible to use an `object` to customize the column, see [column definition](#column-definition).
 settings | Object | Further customization of the table, see [table settings](#table-settings).
 onClickCell | Function | Callback triggered when a cell is clicked: `fn( event, columnName, rowData )`.
 onClickRow | Function | Callback triggered when a row is clicked: `fn( event, rowData )`
@@ -99,7 +98,7 @@ Setting name | Values | Description
 
 ### Reacting to clicks
 It is always useful binding some callbacks when the user clicks on the table.
-Click callbacks can be added using the props `onClickCell`, `onClickHeader` and `onClickRow`. In the next example, we create a component using JsonTable where rows and cells are selected on click, and columns are sorted when the column header is clicked:
+Click callbacks can be added using the props `onClickCell`, `onClickHeader` and `onClickRow`. In the next example we create a component using JsonTable where rows and cells are selected on click, and columns are sorted when the column header is clicked:
 ```js
 var SelectTable = React.createClass({
   getInitialState: function(){
@@ -164,6 +163,13 @@ var SelectTable = React.createClass({
 });
 ```
 http://codepen.io/arqex/pen/pJPzox?editors=011
+
+## What's next?
+Tests, tests, tests... I need to add tests for the different settings in order to continue the developing of new features.
+
+Of course, issues reports, feature and pull requests are welcome. If JsonTable can make you not to code a react table again I will be happy to help.
+
+## [MIT Licensed](LICENSE)
 
 
 
