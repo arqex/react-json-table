@@ -50,6 +50,7 @@ Prop name | Values | Description
 ---|---|---
 rows | Array[Object] | The data you want to display in the table.
 columns | Array[String\|Object] | The columns and their order for the table. If it is a `string` the value attribute of the current row that matches it will be shown as cell content. But also it is possible to use an `object` to customize the column, see [column definition](#column-definition).
+className | *string* | Class to use for the `<table>` element.
 settings | Object | Further customization of the table, see [table settings](#table-settings).
 onClickCell | Function | Callback triggered when a cell is clicked: `fn( event, columnName, rowData )`.
 onClickRow | Function | Callback triggered when a row is clicked: `fn( event, rowData )`
