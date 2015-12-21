@@ -110,35 +110,33 @@ return /******/ (function(modules) { // webpackBootstrap
 			;
 
 			return $.thead({ key: 'th'},
-				$.tr({ className: prefix + 'Header' }, cells )
+				$.tr({ key: this.getSetting('classPrefix') + 'THead', className: prefix + 'Header' }, cells )
 			);
 		},
 
 		renderRows: function( cols ){
 			var me = this,
 				items = this.props.rows,
-				settings = this.props.settings || {},
-				i = 1
-			;
+				settings = this.props.settings || {};
 
 			if( !items || !items.length )
-				return $.tbody({}, [$.tr({}, $.td({}, this.getSetting('noRowsMessage') ))]);
+				return $.tbody({ key: "__noRowsMessage__Table__" }, [$.tr({ key: "__noRowsMessage__Row__" }, $.td({}, this.getSetting('noRowsMessage') ))]);
 
-			var rows = items.map( function( item ){
+			var rows = items.map( function( item, index ){
 				var key = me.getKey( item );
 				return React.createElement(Row, {
-					key: key,
+					key: index,
 					reactKey: key,
 					item: item,
 					settings: settings,
 					columns: cols,
-					i: i++,
+					i: index,
 					onClickRow: me.onClickRow,
 					onClickCell: me.onClickCell
 				});
 			});
 
-			return $.tbody({}, rows);
+			return $.tbody({ key: this.getSetting('classPrefix') + 'TBody' }, rows);
 		},
 
 		getItemField: function( item, field ){
@@ -287,7 +285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
