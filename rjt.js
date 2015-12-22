@@ -29,7 +29,9 @@ var JsonTable = React.createClass({
 		if( this.getSetting('header') )
 			contents.unshift( this.renderHeader( cols ) );
 
-		return $.table({ className: this.getSetting( 'classPrefix' ) + 'Table' }, contents );
+		var tableClass = this.props.className || this.getSetting( 'classPrefix' ) + 'Table';
+
+		return $.table({ className: tableClass }, contents );
 	},
 
 	renderHeader: function( cols ){
