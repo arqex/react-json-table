@@ -1,5 +1,4 @@
 var React = require('react');
-var cs = require('classnames');
 
 var $ = React.DOM;
 
@@ -30,10 +29,7 @@ var JsonTable = React.createClass({
 		if( this.getSetting('header') )
 			contents.unshift( this.renderHeader( cols ) );
 
-		var tableClass = cs(
-			this.getSetting( 'classPrefix' ) + 'Table',
-			this.props.className
-		);
+		var tableClass = this.props.className || this.getSetting( 'classPrefix' ) + 'Table';
 
 		return $.table({ className: tableClass }, contents );
 	},
