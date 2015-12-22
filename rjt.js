@@ -50,7 +50,7 @@ var JsonTable = React.createClass({
 			})
 		;
 
-		return $.thead({ key: 'th'},
+		return $.thead({ key: 'th' },
 			$.tr({ className: prefix + 'Header' }, cells )
 		);
 	},
@@ -63,10 +63,10 @@ var JsonTable = React.createClass({
 		;
 
 		if( !items || !items.length )
-			return $.tbody({}, [$.tr({}, $.td({}, this.getSetting('noRowsMessage') ))]);
+			return $.tbody({key:'body'}, [$.tr({}, $.td({}, this.getSetting('noRowsMessage') ))]);
 
 		var rows = items.map( function( item ){
-			var key = me.getKey( item );
+			var key = me.getKey( item, i );
 			return React.createElement(Row, {
 				key: key,
 				reactKey: key,
@@ -79,7 +79,7 @@ var JsonTable = React.createClass({
 			});
 		});
 
-		return $.tbody({}, rows);
+		return $.tbody({key:'body'}, rows);
 	},
 
 	getItemField: function( item, field ){
@@ -133,7 +133,7 @@ var JsonTable = React.createClass({
 		});
 	},
 
-	getKey: function( item ){
+	getKey: function( item, i ){
 		var field = this.props.settings && this.props.settings.keyField;
 		if( field && item[ field ] )
 			return item[ field ];
@@ -143,6 +143,8 @@ var JsonTable = React.createClass({
 
 		if( item._id )
 			return item._id;
+
+		return i;
 	},
 
 	shouldComponentUpdate: function(){
@@ -210,7 +212,8 @@ var Row = React.createClass({
 
 		return $.tr({
 			className: className,
-			onClick: me.onClickRow
+			onClick: me.onClickRow,
+			key: this.props.reactKey
 		}, cells );
 	},
 
