@@ -63,7 +63,7 @@ var JsonTable = React.createClass({
 		;
 
 		if( !items || !items.length )
-			return $.tbody({key:'body'}, [$.tr({}, $.td({}, this.getSetting('noRowsMessage') ))]);
+			return $.tbody({key:'body'}, [$.tr({key:'row'}, $.td({key:'column'}, this.getSetting('noRowsMessage') ))]);
 
 		var rows = items.map( function( item ){
 			var key = me.getKey( item, i );
