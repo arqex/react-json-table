@@ -192,7 +192,7 @@ var Row = React.createClass({
 
 				if( typeof content == 'function' )
 					content = content( props.item, key );
-                console.log(colStyles);
+
 				return $.td( {
 					className: className,
 					key: key,
