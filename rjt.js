@@ -41,7 +41,7 @@ var JsonTable = React.createClass({
 			cells = cols.map( function(col){
 				var className = prefix + 'Column';
 				if( headerClass )
-					className = headerClass( className, col.key );
+				    className = headerClass( className, col.key );
 
 				return $.th(
 					{ className: className, key: col.key, onClick: me.onClickHeader, "data-key": col.key },
@@ -95,7 +95,6 @@ var JsonTable = React.createClass({
 		if( !cols ){
 			if( !items || !items.length )
 				return [];
-
 			return Object.keys( items[0] ).map( function( key ){
 				return { key: key, label: key, cell: getItemField };
 			});
@@ -118,10 +117,12 @@ var JsonTable = React.createClass({
 				// we use label as key if not defined
 				// we use key as label if not defined
 				// we use getItemField as cell function if not defined
+				// set optional column styles from style option on column definition
 				return {
 					key: key,
 					label: col.label || key,
-					cell: col.cell || getItemField
+					cell: col.cell || getItemField,
+                    style: col.style || {}
 				};
 			}
 
@@ -182,7 +183,8 @@ var Row = React.createClass({
 			cells = props.columns.map( function( col ){
 				var content = col.cell,
 					key = col.key,
-					className = prefix + 'Cell ' + prefix + 'Cell_' + key
+					className = prefix + 'Cell ' + prefix + 'CellA_' + key,
+                    colStyles = col.style || {}
 				;
 
 				if( cellClass )
@@ -190,11 +192,10 @@ var Row = React.createClass({
 
 				if( typeof content == 'function' )
 					content = content( props.item, key );
-
+                console.log(colStyles);
 				return $.td( {
 					className: className,
 					key: key,
-					"data-key": key,
 					onClick: me.onClickCell
 				}, content );
 			})
