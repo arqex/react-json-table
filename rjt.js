@@ -122,7 +122,7 @@ var JsonTable = React.createClass({
 					key: key,
 					label: col.label || key,
 					cell: col.cell || getItemField,
-                    style: col.style || {}
+                    			style: col.style || {}
 				};
 			}
 
@@ -183,8 +183,8 @@ var Row = React.createClass({
 			cells = props.columns.map( function( col ){
 				var content = col.cell,
 					key = col.key,
-					className = prefix + 'Cell ' + prefix + 'CellA_' + key,
-                    colStyles = col.style || {}
+					className = prefix + 'Cell ' + prefix + 'Cell_' + key,
+                                        colStyles = col.style || {}
 				;
 
 				if( cellClass )
@@ -196,8 +196,8 @@ var Row = React.createClass({
 				return $.td( {
 					className: className,
 					key: key,
-                    style: colStyles,
-                    "data-key": key,
+                    			style: colStyles,
+                    			"data-key": key,
 					onClick: me.onClickCell
 				}, content );
 			})
