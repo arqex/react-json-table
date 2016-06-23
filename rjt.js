@@ -118,12 +118,19 @@ var JsonTable = React.createClass({
 				// we use key as label if not defined
 				// we use getItemField as cell function if not defined
 				// set optional column styles from style option on column definition
-				return {
+				// set optional column class from class option on column definition
+                var columnOptions = {
 					key: key,
 					label: col.label || key,
 					cell: col.cell || getItemField,
-                    			style: col.style || {}
 				};
+                if (col.style) {
+                    columnOptions.style = col.style;
+                }
+                if (col.class) {
+                    columnOptions.class = col.class;
+                }
+				return columnOptions;
 			}
 
 			return {
@@ -184,7 +191,7 @@ var Row = React.createClass({
 				var content = col.cell,
 					key = col.key,
 					className = prefix + 'Cell ' + prefix + 'Cell_' + key,
-                                        colStyles = col.style || {}
+                    colStyles = col.style || {}
 				;
 
 				if( cellClass )
