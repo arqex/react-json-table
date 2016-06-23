@@ -41,7 +41,7 @@ var JsonTable = React.createClass({
 			cells = cols.map( function(col){
 				var className = prefix + 'Column';
 				if( headerClass )
-					className = headerClass( className, col.key );
+				    className = headerClass( className, col.key );
 
 				return $.th(
 					{ className: className, key: col.key, onClick: me.onClickHeader, "data-key": col.key },
@@ -95,7 +95,6 @@ var JsonTable = React.createClass({
 		if( !cols ){
 			if( !items || !items.length )
 				return [];
-
 			return Object.keys( items[0] ).map( function( key ){
 				return { key: key, label: key, cell: getItemField };
 			});
@@ -118,11 +117,20 @@ var JsonTable = React.createClass({
 				// we use label as key if not defined
 				// we use key as label if not defined
 				// we use getItemField as cell function if not defined
-				return {
+				// set optional column styles from style option on column definition
+				// set optional column class from class option on column definition
+                var columnOptions = {
 					key: key,
 					label: col.label || key,
-					cell: col.cell || getItemField
+					cell: col.cell || getItemField,
 				};
+                if (col.style) {
+                    columnOptions.style = col.style;
+                }
+                if (col.class) {
+                    columnOptions.class = col.class;
+                }
+				return columnOptions;
 			}
 
 			return {
@@ -182,11 +190,15 @@ var Row = React.createClass({
 			cells = props.columns.map( function( col ){
 				var content = col.cell,
 					key = col.key,
-					className = prefix + 'Cell ' + prefix + 'Cell_' + key
+					className = prefix + 'Cell ' + prefix + 'Cell_' + key,
+                    colStyles = col.style || {}
 				;
 
 				if( cellClass )
 					className = cellClass( className, key, props.item );
+
+                if( col.class )
+                    className += ' '+col.class;
 
 				if( typeof content == 'function' )
 					content = content( props.item, key );
@@ -194,7 +206,8 @@ var Row = React.createClass({
 				return $.td( {
 					className: className,
 					key: key,
-					"data-key": key,
+        			style: colStyles,
+        			"data-key": key,
 					onClick: me.onClickCell
 				}, content );
 			})
