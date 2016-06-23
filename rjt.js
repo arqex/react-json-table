@@ -197,14 +197,17 @@ var Row = React.createClass({
 				if( cellClass )
 					className = cellClass( className, key, props.item );
 
+                if( col.class )
+                    className += ' '+col.class;
+
 				if( typeof content == 'function' )
 					content = content( props.item, key );
 
 				return $.td( {
 					className: className,
 					key: key,
-                    			style: colStyles,
-                    			"data-key": key,
+        			style: colStyles,
+        			"data-key": key,
 					onClick: me.onClickCell
 				}, content );
 			})
