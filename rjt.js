@@ -87,7 +87,7 @@ var JsonTable = React.createClass({
 	},
 
 	normalizeColumns: function(){
-		var getItemField = this.getItemField,
+		var getItemField = this.props.cellRenderer || this.getItemField,
 			cols = this.props.columns,
 			items = this.props.rows
 		;
@@ -184,6 +184,8 @@ var Row = React.createClass({
 					key = col.key,
 					className = prefix + 'Cell ' + prefix + 'Cell_' + key
 				;
+
+				console.log( col );
 
 				if( cellClass )
 					className = cellClass( className, key, props.item );

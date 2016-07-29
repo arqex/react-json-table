@@ -1,5 +1,5 @@
 /*
-react-json-table v0.0.3
+react-json-table v0.1.0
 https://github.com/arqex/react-json-table
 MIT: https://github.com/arqex/react-json-table/raw/master/LICENSE
 */
@@ -124,7 +124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			;
 
 			if( !items || !items.length )
-				return $.tbody({key:'body'}, [$.tr({}, $.td({}, this.getSetting('noRowsMessage') ))]);
+				return $.tbody({key:'body'}, [$.tr({key:'row'}, $.td({key:'column'}, this.getSetting('noRowsMessage') ))]);
 
 			var rows = items.map( function( item ){
 				var key = me.getKey( item, i );
@@ -148,7 +148,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		normalizeColumns: function(){
-			var getItemField = this.getItemField,
+			var getItemField = this.props.cellRenderer || this.getItemField,
 				cols = this.props.columns,
 				items = this.props.rows
 			;
@@ -245,6 +245,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						key = col.key,
 						className = prefix + 'Cell ' + prefix + 'Cell_' + key
 					;
+
+					console.log( col );
 
 					if( cellClass )
 						className = cellClass( className, key, props.item );

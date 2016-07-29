@@ -1,6 +1,6 @@
 {
   "name": "react-json-table",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "A simple but reactive table react component to display JSON data.",
   "main": "rjt.js",
   "scripts": {

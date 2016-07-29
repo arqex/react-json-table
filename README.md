@@ -94,6 +94,7 @@ Setting name | Values | Description
 `keyField` | *string* | React components that have a list of children need to give to every children a different `key` prop in order to make the diff algorithm check if something has change. You can define here what field of your rows will be used as a row key. JsonTable uses the `id`  or `_id` property of your rows automatically if you don't give this setting, but **you must be sure that there is a keyField for your rows** if you don't want strange behaviours on update. [More info](https://facebook.github.io/react/docs/multiple-components.html#dynamic-children).
 `noRowsMessage` | *string*, *ReactComponent* | Message shown when the table has no rows. Default *"No items"*.
 `rowClass` | *function* | It is possible to add custom classes to the rows if you pass a function `fn( currentClass, rowData )` in this setting.
+`cellRenderer` | *function(item,field)* | If provided, this function will be used to render all the cells' content, so it is a way of programatically customize every cell. If no provided, the cell contents will just be `item[field]`, the value of the item for that field.
 
 [You can play with the table settings here](http://codepen.io/arqex/pen/YXZBKG?editors=011).
 
@@ -118,15 +119,15 @@ var SelectTable = React.createClass({
          return a[ me.state.sort ] > b[ me.state.sort ] ? 1 : -1;
       });
     }
-        
-    return <JsonTable 
-      rows={items} 
-      settings={ this.getSettings() } 
+
+    return <JsonTable
+      rows={items}
+      settings={ this.getSettings() }
       onClickCell={ this.onClickCell }
       onClickHeader={ this.onClickHeader }
       onClickRow={ this.onClickRow } />;
   },
-  
+
   getSettings: function(){
       var me = this;
       // We will add some classes to the selected rows and cells
@@ -149,15 +150,15 @@ var SelectTable = React.createClass({
         }
       };
   },
-  
+
   onClickCell: function( e, column, item ){
     this.setState( {cell: column} );
   },
-  
+
   onClickHeader: function( e, column ){
     this.setState( {sort: column} );
   },
-  
+
   onClickRow: function( e, item ){
     this.setState( {row: item.name} );
   }  
@@ -171,6 +172,3 @@ Tests, tests, tests... I need to add tests for the different settings in order t
 Of course, issues reports, feature and pull requests are welcome. If JsonTable can make you not to code a react table again I will be happy to help.
 
 ## [MIT Licensed](LICENSE)
-
-
-
