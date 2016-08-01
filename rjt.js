@@ -185,8 +185,6 @@ var Row = React.createClass({
 					className = prefix + 'Cell ' + prefix + 'Cell_' + key
 				;
 
-				console.log( col );
-
 				if( cellClass )
 					className = cellClass( className, key, props.item );
 

@@ -1,5 +1,5 @@
 /*
-react-json-table v0.1.0
+react-json-table v0.1.1
 https://github.com/arqex/react-json-table
 MIT: https://github.com/arqex/react-json-table/raw/master/LICENSE
 */
@@ -245,8 +245,6 @@ return /******/ (function(modules) { // webpackBootstrap
 						key = col.key,
 						className = prefix + 'Cell ' + prefix + 'Cell_' + key
 					;
-
-					console.log( col );
 
 					if( cellClass )
 						className = cellClass( className, key, props.item );
