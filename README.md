@@ -55,6 +55,7 @@ settings | Object | Further customization of the table, see [table settings](#ta
 onClickCell | Function | Callback triggered when a cell is clicked: `fn( event, columnName, rowData )`.
 onClickRow | Function | Callback triggered when a row is clicked: `fn( event, rowData )`
 onClickHeader | Function | Callback triggered when a column header is clicked: `fn( event, columnName )`
+cellRenderer | *function(item,field)* | If provided, this function will be used to render all the cells' content, so it is a way of programatically customize every cell. If no provided, the cell contents will just be `item[field]`, the value of the item for that field.
 
 ### Column definition
 Using column definitions you can change the behaviour of the column easily. To do so you need to pass an array of the column definitions as the `columns` prop to the JsonTable:
@@ -94,7 +95,6 @@ Setting name | Values | Description
 `keyField` | *string* | React components that have a list of children need to give to every children a different `key` prop in order to make the diff algorithm check if something has change. You can define here what field of your rows will be used as a row key. JsonTable uses the `id`  or `_id` property of your rows automatically if you don't give this setting, but **you must be sure that there is a keyField for your rows** if you don't want strange behaviours on update. [More info](https://facebook.github.io/react/docs/multiple-components.html#dynamic-children).
 `noRowsMessage` | *string*, *ReactComponent* | Message shown when the table has no rows. Default *"No items"*.
 `rowClass` | *function* | It is possible to add custom classes to the rows if you pass a function `fn( currentClass, rowData )` in this setting.
-`cellRenderer` | *function(item,field)* | If provided, this function will be used to render all the cells' content, so it is a way of programatically customize every cell. If no provided, the cell contents will just be `item[field]`, the value of the item for that field.
 
 [You can play with the table settings here](http://codepen.io/arqex/pen/YXZBKG?editors=011).
 
