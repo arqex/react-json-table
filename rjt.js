@@ -195,6 +195,7 @@ var Row = React.createClass({
 					className: className,
 					key: key,
 					"data-key": key,
+					"data-th": key,
 					onClick: me.onClickCell
 				}, content );
 			})
