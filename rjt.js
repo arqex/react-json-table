@@ -117,10 +117,12 @@ var JsonTable = React.createClass({
 				// This is about get default column definition
 				// we use label as key if not defined
 				// we use key as label if not defined
+				// we use empty style as style if not defined
 				// we use getItemField as cell function if not defined
 				return {
 					key: key,
 					label: col.label || key,
+					style: col.style || {},
 					cell: col.cell || getItemField
 				};
 			}
@@ -193,6 +195,7 @@ var Row = React.createClass({
 
 				return $.td( {
 					className: className,
+					style: col.style,
 					key: key,
 					"data-key": key,
 					onClick: me.onClickCell
