@@ -26,5 +26,9 @@
     "gulp-insert": "^0.4.0",
     "gulp-uglify": "^1.2.0",
     "gulp-webpack": "^1.4.0"
+  },
+  "dependencies": {
+    "create-react-class": "^15.6.0",
+    "react-dom-factories": "^1.0.1"
   }
 }
