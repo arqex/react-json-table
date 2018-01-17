@@ -135,13 +135,13 @@ var JsonTable = React.createClass({
 
 	getKey: function( item, i ){
 		var field = this.props.settings && this.props.settings.keyField;
-		if( field && item[ field ] )
+		if( field !== undefined && item[ field ] !== undefined )
 			return item[ field ];
 
-		if( item.id )
+		if( item.id !== undefined )
 			return item.id;
 
-		if( item._id )
+		if( item._id !== undefined )
 			return item._id;
 
 		return i;
