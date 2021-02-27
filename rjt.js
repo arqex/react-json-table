@@ -1,5 +1,12 @@
 var React = require('react');
-
+// createClass method was deprecated and move into a separate package
+// TODO: migrate the react class by using React.component instead of createClass
+var createReactClass = undefined
+if (React.createClass){
+    createReactClass = React.createClass
+} else {
+    createReactClass = require('create-react-class');
+}
 var $ = React.DOM;
 
 // Some shared attrs for JsonTable and JsonRow
@@ -18,7 +25,7 @@ var defaultSettings = {
 	}
 ;
 
-var JsonTable = React.createClass({
+var JsonTable = createReactClass({
 	getSetting: getSetting,
 
 	render: function(){
@@ -170,7 +177,7 @@ var JsonTable = React.createClass({
 	}
 });
 
-var Row = React.createClass({
+var Row = createReactClass({
 	getSetting: getSetting,
 
 	render: function() {
